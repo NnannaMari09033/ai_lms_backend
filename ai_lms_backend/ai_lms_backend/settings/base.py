@@ -37,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app.authentication',
+    'rest_framework',
+    'app.courses',
+    'app.quizzes',
+    'app.ai_services',
+    
 ]
 
 MIDDLEWARE = [
@@ -49,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ai_lms_backend.urls'
+ROOT_URLCONF = 'ai_lms_backend.ai_lms_backend.urls'
 
 TEMPLATES = [
     {
@@ -66,18 +72,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ai_lms_backend.wsgi.application'
+WSGI_APPLICATION = 'ai_lms_backend.ai_lms_backend.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+
 
 
 # Password validation

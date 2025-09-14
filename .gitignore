@@ -1,0 +1,17 @@
+.env
+.e.examplenv
+__pycache__/
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+.DS_Store
+.vscode/
+.idea/
+*.log
+*.pot
+*.pyc
+*.sqlite3
+*.sqlite
+*.env
+*.env.*

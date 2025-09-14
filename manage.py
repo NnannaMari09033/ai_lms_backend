@@ -2,12 +2,12 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+from ai_lms_backend.ai_lms_backend.settings import base
 
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ai_lms_backend.local')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ai_lms_backend.ai_lms_backend.settings.base')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
