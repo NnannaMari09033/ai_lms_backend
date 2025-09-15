@@ -1,24 +1,33 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser 
+from django.contrib.auth.models import AbstractUser
+from .managers import CustomUserManager
 
 
 class User(AbstractUser):
-  ROLE_CHOICES = (
+    ROLE_CHOICES = (
         ('student', 'Student'),
         ('instructor', 'Instructor'),
         ('admin', 'Admin'),
     )
-  role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')   
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
+    email = models.EmailField(unique=True)
 
-  def is_student(self):
-      return self.role == 'student' 
-  
-  def is_instructor(self):
-      return self.role == 'instructor'  
-  
-  def is_admin(self):
-      return self.role == 'admin'
-  
+    # attach the custom manager
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = "email"          # login with email instead of username
+    REQUIRED_FIELDS = ["username"]    # still required when creating superuser
+
+    def is_student(self):
+        return self.role == 'student'
+
+    def is_instructor(self):
+        return self.role == 'instructor'
+
+    def is_admin(self):
+        return self.role == 'admin'
+
+
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
     bio = models.TextField(blank=True, null=True)

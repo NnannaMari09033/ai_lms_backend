@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'app.courses',
     'app.quizzes',
     'app.ai_services',
+    'rest_framework_simplejwt',
     
 ]
 
@@ -77,9 +78,35 @@ WSGI_APPLICATION = 'ai_lms_backend.ai_lms_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "ai_lms_db",
+        "USER": "ai_lms_user",
+        "PASSWORD": "ayooladaniel",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+}
 
 
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
