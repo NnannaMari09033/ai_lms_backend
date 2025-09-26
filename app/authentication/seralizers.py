@@ -19,10 +19,6 @@ from .models import StudentProfile, InstructorProfile
 User = get_user_model()
 
 
-# -------------------------
-# USER SERIALIZERS
-# -------------------------
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .managers import CustomUserManager
-
+from django.contrib.auth.models import AbstractUser, Group, Permission
 
 class User(AbstractUser):
     ROLE_CHOICES = (
@@ -12,11 +12,27 @@ class User(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
     email = models.EmailField(unique=True)
 
-    # attach the custom manager
+    # Override ManyToMany fields to prevent reverse accessor clash
+    groups = models.ManyToManyField(
+        Group,
+        related_name='custom_user_set',  # <-- must be unique
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups'
+    )
+
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='custom_user_permissions',  # <-- must be unique
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions'
+    )
+
     objects = CustomUserManager()
 
-    USERNAME_FIELD = "email"          # login with email instead of username
-    REQUIRED_FIELDS = ["username"]    # still required when creating superuser
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     def is_student(self):
         return self.role == 'student'

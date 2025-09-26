@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ai_lms_backend.ai_lms_backend.production')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ai_lms_backend.production')
 
 application = get_wsgi_application()
