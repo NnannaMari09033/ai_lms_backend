@@ -22,7 +22,7 @@ urlpatterns = [
     path('auth/', include('app.authentication.urls')),
     path('courses/', include('app.courses.urls')),
     path('quizzes/', include('app.quizzes.urls')),
-    path('ai/', include('app.ai_services.urls')),
+    # path('ai/', include('app.ai_services.urls')),
 ]
     
 

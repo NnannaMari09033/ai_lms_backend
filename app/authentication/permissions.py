@@ -34,7 +34,7 @@ class RolePermission(BasePermission):
         return request.user.role in self.roles
 
 
-# --- Common Role-Based Permissions --- #
+
 IsAdmin = RolePermission(roles=["admin"])
 IsInstructor = RolePermission(roles=["instructor"])
 IsStudent = RolePermission(roles=["student"])
@@ -44,7 +44,7 @@ IsAdminOrStudent = RolePermission(roles=["admin", "student"])
 IsInstructorOrStudent = RolePermission(roles=["instructor", "student"])
 IsAdminOrInstructorOrStudent = RolePermission(roles=["admin", "instructor", "student"])
 
-# --- Read-Only Variants --- #
+
 IsAdminOrReadOnly = RolePermission(roles=["admin"], read_only=True)
 IsInstructorOrReadOnly = RolePermission(roles=["instructor"], read_only=True)
 IsStudentOrReadOnly = RolePermission(roles=["student"], read_only=True)
@@ -53,7 +53,7 @@ IsAdminOrStudentOrReadOnly = RolePermission(roles=["admin", "student"], read_onl
 IsInstructorOrStudentOrReadOnly = RolePermission(roles=["instructor", "student"], read_only=True)
 IsAdminOrInstructorOrStudentOrReadOnly = RolePermission(roles=["admin", "instructor", "student"], read_only=True)
 
-# --- Owner-Based Variants --- #
+
 IsOwnerOrReadOnly = RolePermission(read_only=True, owner_check=True)
 IsOwnerOrAdmin = RolePermission(roles=["admin"], owner_check=True)
 IsOwnerOrInstructor = RolePermission(roles=["instructor"], owner_check=True)
