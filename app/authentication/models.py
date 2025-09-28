@@ -53,7 +53,7 @@ class StudentProfile(models.Model):
     grade_level = models.CharField(max_length=50, blank=True, null=True)
     interests = models.TextField(blank=True, null=True)
     email_address = models.EmailField(blank=True, null=True)
-
+    
 
 class InstructorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='instructor_profile')

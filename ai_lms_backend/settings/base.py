@@ -11,21 +11,23 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x^0q2jj6_(plo3xy@p+k$a86c&=&2o3@l9fnsl_rj5#1ihe-)j'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-x^0q2jj6_(plo3xy@p+k$a86c&=&2o3@l9fnsl_rj5#1ihe-)j')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -37,13 +39,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app.authentication',
+    
+    # Third party apps
     'rest_framework',
+    'rest_framework_simplejwt',
+    'drf_spectacular',
+    'health_check',
+    'health_check.db',
+    'health_check.cache',
+    'health_check.storage',
+    
+    # Local apps
+    'app.authentication',
     'app.courses',
     'app.quizzes',
     'app.ai_services',
-    'rest_framework_simplejwt',
-    
 ]
 
 MIDDLEWARE = [
@@ -82,17 +92,16 @@ WSGI_APPLICATION = 'ai_lms_backend.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ai_lms_db",
-        "USER": "ai_lms_user",
-        "PASSWORD": "ayooladaniel",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": config('DATABASE_NAME', default='ai_lms_db'),
+        "USER": config('DATABASE_USER', default='ai_lms_user'),
+        "PASSWORD": config('DATABASE_PASSWORD', default='ayooladaniel'),
+        "HOST": config('DATABASE_HOST', default='localhost'),
+        "PORT": config('DATABASE_PORT', default='5432'),
     }
 }
 
 
-
-
+# REST Framework Configuration
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -102,10 +111,10 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-from datetime import timedelta
-
+# JWT Configuration
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
@@ -114,7 +123,51 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
+# API Documentation
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'AI-Powered LMS API',
+    'DESCRIPTION': 'A comprehensive Learning Management System with AI-powered features',
+    'VERSION': '3.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+}
 
+# AI Services Configuration
+OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
+ANTHROPIC_API_KEY = config('ANTHROPIC_API_KEY', default='')
+
+# AI Usage Limits (per month)
+AI_USAGE_LIMITS = {
+    'student': config('AI_USAGE_LIMIT_STUDENT', default=50, cast=int),
+    'instructor': config('AI_USAGE_LIMIT_INSTRUCTOR', default=200, cast=int),
+    'admin': config('AI_USAGE_LIMIT_ADMIN', default=1000, cast=int),
+}
+
+# AI Security Settings
+AI_MAX_INPUT_LENGTH = config('AI_MAX_INPUT_LENGTH', default=5000, cast=int)
+ENCRYPTION_KEY = config('ENCRYPTION_KEY', default='')
+
+# Health Check Configuration
+HEALTH_CHECK = {
+    'DISK_USAGE_MAX': 90,  # percent
+    'MEMORY_MIN': 100,    # in MB
+}
+
+# Celery Configuration
+CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+# Cache Configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': config('REDIS_URL', default='redis://localhost:6379/1'),
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -153,3 +206,44 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/ai_lms.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'app': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
