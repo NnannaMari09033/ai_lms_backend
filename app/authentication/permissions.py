@@ -13,57 +13,113 @@ class RolePermission(BasePermission):
     """
 
     def __init__(self, roles=None, read_only=False, owner_check=False):
+        # NOTE: This __init__ is called when the permission is INSTANTIATED (by the factory function).
         self.roles = roles or []
         self.read_only = read_only
         self.owner_check = owner_check
 
     def has_permission(self, request, view):
+        # Allow Django superusers full access at the view level
+        if request.user and request.user.is_superuser:
+            return True
+            
         if not request.user or not request.user.is_authenticated:
             return False
+            
         if self.read_only and request.method in SAFE_METHODS:
             return True
+            
         return request.user.role in self.roles
 
     def has_object_permission(self, request, view, obj):
+        # Allow Django superusers full access at the object level
+        if request.user and request.user.is_superuser:
+             return True
+             
         if self.read_only and request.method in SAFE_METHODS:
             return True
 
         if self.owner_check and hasattr(obj, "user"):
+            # Check if user is the owner OR has one of the allowed roles
             return obj.user == request.user or request.user.role in self.roles
 
+        # Otherwise, check only for roles
         return request.user.role in self.roles
 
 
+# ----------------------------------------------------------------------
+# FIX: Define variables as FACTORY FUNCTIONS that return the instance.
+# This makes them callable by DRF when they are in `permission_classes`.
+# ----------------------------------------------------------------------
 
-IsAdmin = RolePermission(roles=["admin"])
-IsInstructor = RolePermission(roles=["instructor"])
-IsStudent = RolePermission(roles=["student"])
+# 1. Simple Role Checks (Non-owners)
+def IsAdmin():
+    return RolePermission(roles=["admin"])
+    
+def IsInstructor():
+    return RolePermission(roles=["instructor"])
+    
+def IsStudent():
+    return RolePermission(roles=["student"])
 
-IsAdminOrInstructor = RolePermission(roles=["admin", "instructor"])
-IsAdminOrStudent = RolePermission(roles=["admin", "student"])
-IsInstructorOrStudent = RolePermission(roles=["instructor", "student"])
-IsAdminOrInstructorOrStudent = RolePermission(roles=["admin", "instructor", "student"])
+def IsAdminOrInstructor():
+    return RolePermission(roles=["admin", "instructor"])
+    
+def IsAdminOrStudent():
+    return RolePermission(roles=["admin", "student"])
+    
+def IsInstructorOrStudent():
+    return RolePermission(roles=["instructor", "student"])
+    
+def IsAdminOrInstructorOrStudent():
+    return RolePermission(roles=["admin", "instructor", "student"])
 
 
-IsAdminOrReadOnly = RolePermission(roles=["admin"], read_only=True)
-IsInstructorOrReadOnly = RolePermission(roles=["instructor"], read_only=True)
-IsStudentOrReadOnly = RolePermission(roles=["student"], read_only=True)
-IsAdminOrInstructorOrReadOnly = RolePermission(roles=["admin", "instructor"], read_only=True)
-IsAdminOrStudentOrReadOnly = RolePermission(roles=["admin", "student"], read_only=True)
-IsInstructorOrStudentOrReadOnly = RolePermission(roles=["instructor", "student"], read_only=True)
-IsAdminOrInstructorOrStudentOrReadOnly = RolePermission(roles=["admin", "instructor", "student"], read_only=True)
+# 2. Read-Only Role Checks
+def IsAdminOrReadOnly():
+    return RolePermission(roles=["admin"], read_only=True)
+    
+def IsInstructorOrReadOnly():
+    return RolePermission(roles=["instructor"], read_only=True)
+    
+def IsStudentOrReadOnly():
+    return RolePermission(roles=["student"], read_only=True)
+    
+def IsAdminOrInstructorOrReadOnly():
+    return RolePermission(roles=["admin", "instructor"], read_only=True)
+    
+def IsAdminOrStudentOrReadOnly():
+    return RolePermission(roles=["admin", "student"], read_only=True)
+    
+def IsInstructorOrStudentOrReadOnly():
+    return RolePermission(roles=["instructor", "student"], read_only=True)
+    
+def IsAdminOrInstructorOrStudentOrReadOnly():
+    return RolePermission(roles=["admin", "instructor", "student"], read_only=True)
 
 
-IsOwnerOrReadOnly = RolePermission(read_only=True, owner_check=True)
-IsOwnerOrAdmin = RolePermission(roles=["admin"], owner_check=True)
-IsOwnerOrInstructor = RolePermission(roles=["instructor"], owner_check=True)
-IsOwnerOrStudent = RolePermission(roles=["student"], owner_check=True)
-IsOwnerOrAdminOrInstructor = RolePermission(roles=["admin", "instructor"], owner_check=True)
-IsOwnerOrAdminOrStudent = RolePermission(roles=["admin", "student"], owner_check=True)
-IsOwnerOrInstructorOrStudent = RolePermission(roles=["instructor", "student"], owner_check=True)
-IsOwnerOrAdminOrInstructorOrStudent = RolePermission(
-    roles=["admin", "instructor", "student"], owner_check=True
-)
-
-  
+# 3. Owner-Based Checks
+def IsOwnerOrReadOnly():
+    return RolePermission(read_only=True, owner_check=True)
+    
+def IsOwnerOrAdmin():
+    return RolePermission(roles=["admin"], owner_check=True)
+    
+def IsOwnerOrInstructor():
+    return RolePermission(roles=["instructor"], owner_check=True)
+    
+def IsOwnerOrStudent():
+    return RolePermission(roles=["student"], owner_check=True)
+    
+def IsOwnerOrAdminOrInstructor():
+    return RolePermission(roles=["admin", "instructor"], owner_check=True)
+    
+def IsOwnerOrAdminOrStudent():
+    return RolePermission(roles=["admin", "student"], owner_check=True)
+    
+def IsOwnerOrInstructorOrStudent():
+    return RolePermission(roles=["instructor", "student"], owner_check=True)
+    
+def IsOwnerOrAdminOrInstructorOrStudent():
+    return RolePermission(roles=["admin", "instructor", "student"], owner_check=True)
               

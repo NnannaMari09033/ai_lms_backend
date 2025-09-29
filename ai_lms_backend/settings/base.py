@@ -132,28 +132,28 @@ SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
 }
 
-# AI Services Configuration
+
 OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
 ANTHROPIC_API_KEY = config('ANTHROPIC_API_KEY', default='')
 
-# AI Usage Limits (per month)
+
 AI_USAGE_LIMITS = {
     'student': config('AI_USAGE_LIMIT_STUDENT', default=50, cast=int),
     'instructor': config('AI_USAGE_LIMIT_INSTRUCTOR', default=200, cast=int),
     'admin': config('AI_USAGE_LIMIT_ADMIN', default=1000, cast=int),
 }
 
-# AI Security Settings
+
 AI_MAX_INPUT_LENGTH = config('AI_MAX_INPUT_LENGTH', default=5000, cast=int)
 ENCRYPTION_KEY = config('ENCRYPTION_KEY', default='')
 
-# Health Check Configuration
+
 HEALTH_CHECK = {
     'DISK_USAGE_MAX': 90,  # percent
     'MEMORY_MIN': 100,    # in MB
 }
 
-# Celery Configuration
+
 CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379/0')
 CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
@@ -196,14 +196,20 @@ USE_I18N = True
 
 USE_TZ = True
 
+import os
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+BASE_DIR = Path(__file__).resolve().parent.parent 
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_collected') 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = []
+
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
