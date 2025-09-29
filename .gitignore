@@ -18,3 +18,5 @@ staticfiles/
 .venv
 .venv/
 venv/
+myenv/
+venv/
