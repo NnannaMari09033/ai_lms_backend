@@ -7,7 +7,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ai_lms_backend.local')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ai_lms_backend.ai_lms_backend.settings.local')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
