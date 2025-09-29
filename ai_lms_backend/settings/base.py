@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'health_check',
     'health_check.db',
     'health_check.cache',
-    'health_check.storage',
+    # 'health_check.storage',
     
     # Local apps
     'app.authentication',
@@ -203,6 +203,8 @@ import os
 
 STATIC_URL = 'static/'
 BASE_DIR = Path(__file__).resolve().parent.parent 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_collected') 
