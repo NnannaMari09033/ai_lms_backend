@@ -147,7 +147,7 @@ class EnhancedAIService:
         model = self.config.get('model', 'gpt-3.5-turbo')
         
         try:
-            # Get API key from settings
+            
             if provider_name == 'openai':
                 api_key = settings.OPENAI_API_KEY
             elif provider_name == 'anthropic':
@@ -404,7 +404,7 @@ LESSON CONTENT:
 {lesson_content}
 
 Focus on the key concepts, main ideas, and learning objectives. Ensure questions test different levels of understanding (knowledge, comprehension, application, analysis)."""
-    
+     
     def _parse_quiz_response(self, response_content: str) -> Dict:
         """Enhanced quiz response parsing with validation"""
         try:

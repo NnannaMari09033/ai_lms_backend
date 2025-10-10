@@ -17,7 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-
+from django.http import HttpResponse
+from django.conf.urls.static import static
+from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     
@@ -28,12 +30,15 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('', lambda request: HttpResponse("Welcome to LMS")),
+
+
     
     # API Endpoints
     path('api/auth/', include('app.authentication.urls')),
     path('api/courses/', include('app.courses.urls')),
     path('api/quizzes/', include('app.quizzes.urls')),
     path('api/ai/', include('app.ai_services.urls')),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     
 
