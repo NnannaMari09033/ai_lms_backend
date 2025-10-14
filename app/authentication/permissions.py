@@ -47,12 +47,6 @@ class RolePermission(BasePermission):
         return request.user.role in self.roles
 
 
-# ----------------------------------------------------------------------
-# FIX: Define variables as FACTORY FUNCTIONS that return the instance.
-# This makes them callable by DRF when they are in `permission_classes`.
-# ----------------------------------------------------------------------
-
-# 1. Simple Role Checks (Non-owners)
 def IsAdmin():
     return RolePermission(roles=["admin"])
     

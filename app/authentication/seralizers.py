@@ -181,10 +181,6 @@ class SetNewPasswordSerializer(serializers.Serializer):
         return user
 
 
-# -------------------------
-# PROFILE SERIALIZERS
-# -------------------------
-
 class StudentProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
