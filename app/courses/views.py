@@ -24,6 +24,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     Students only see published courses.
     """
 
+
     serializer_class = CourseSerializer
     pagination_class = StandardResultsSetPagination
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -136,7 +137,13 @@ class CourseReviewViewSet(viewsets.ModelViewSet):
         return CourseReview.objects.filter(enrollment__student=self.request.user)
 
     def perform_create(self, serializer):
-        enrollment = serializer.validated_data["enrollment"]
+        enrollment = serializer.validated_data.get("enrollment")
+        if enrollment:
+           
+            serializer.save(user=self.request.user, enrollment_id=enrollment)
+        else:
+            
+            serializer.save(user=self.request.user)
         if enrollment.student != self.request.user:
             raise permissions.PermissionDenied("You can only review your own enrollments.")
         if enrollment.status != "completed":

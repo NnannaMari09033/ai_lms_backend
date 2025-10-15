@@ -96,13 +96,17 @@ class CourseReview(models.Model):
     enrollment = models.OneToOneField(
         Enrollment, on_delete=models.CASCADE, related_name="review"
     )
-    rating = models.PositiveIntegerField()  # 1–5 scale
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="reviews"
+    )
+    rating = models.PositiveIntegerField()
     comment = models.TextField(blank=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Review by {self.enrollment.student} for {self.enrollment.course}"
+        return f"Review by {self.user} for {self.enrollment.course}"
