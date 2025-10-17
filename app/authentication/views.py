@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.throttling import ScopedRateThrottle, AnonRateThrottle, UserRateThrottle
 from rest_framework.views import APIView
 
+
 from .seralizers import (
     RegisterSerializer,
     LoginSerializer,
