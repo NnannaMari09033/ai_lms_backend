@@ -1,4 +1,6 @@
 from django.urls import path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from .views import (
     CourseViewSet, EnrollmentViewSet, LessonProgressViewSet,
     CourseReviewViewSet
@@ -14,4 +16,7 @@ urlpatterns = [
     path("lessons/<int:pk>/", LessonProgressViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"}), name="lessonprogress-detail"),
     path("reviews/", CourseReviewViewSet.as_view({"get": "list", "post": "create"}), name="review-list"),
     path("reviews/<int:pk>/", CourseReviewViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"}), name="review-detail"),
+    path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
 ]

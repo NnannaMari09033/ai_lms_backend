@@ -107,6 +107,5 @@ class CourseReview(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
-
-    def __str__(self):
-        return f"Review by {self.user} for {self.enrollment.course}"
+        def __str__(self):
+         return f"Review by {self.user} for {self.enrollment.course}"
